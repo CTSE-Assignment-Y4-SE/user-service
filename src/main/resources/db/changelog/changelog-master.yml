@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/ddl/ddl-script-v1.sql
+
+  - include:
+      file: classpath:/db/changelog/ddl/ddl-script-v2.sql
+
+  - include:
+      file: classpath:/db/changelog/ddl/ddl-script-v3.sql
+
+  - include:
+      file: classpath:/db/changelog/ddl/ddl-script-v4.sql
+
+  - include:
+      file: classpath:/db/changelog/ddl/ddl-script-v5.sql
