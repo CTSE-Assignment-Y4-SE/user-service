@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package com.garage.garage_service.core.grpc;
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.garage.vehicle_owner_service.core.grpc.server";
+option java_outer_classname = "VehicleOwnerAccountServiceProto";
+
+message VehicleOwnerAccountCreateRequest {
+  int64 userId = 1;
+}
+
+message VehicleOwnerAccountCreateResponse {
+  int64 vehicleOwnerId = 1;
+  int64 userId = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string phoneNumber = 5;
+}
+
+message VehicleOwnerAccountListResponse {
+  repeated VehicleOwnerAccountCreateResponse vehicleOwners = 1;
+}
+
+service VehicleOwnerAccountService {
+  rpc CreateVehicleOwnerAccount(VehicleOwnerAccountCreateRequest) returns (VehicleOwnerAccountCreateResponse);
+
+  rpc GetAllVehicleOwners(google.protobuf.Empty) returns (VehicleOwnerAccountListResponse);
+}
