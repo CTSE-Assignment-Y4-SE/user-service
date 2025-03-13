@@ -1,0 +1,39 @@
+server:
+  port: 9092
+
+grpc:
+  server:
+    port: 7072
+  address:
+    name: localhost
+    service-port:
+      vehicle-owner: 7073
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user-service
+    username: postgres
+    password: Root@123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 5
+      connection-timeout: 30000
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.yml
+  kafka:
+    producer:
+      bootstrap-servers: localhost:29092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+jwt:
+  signing:
+    key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
+    expiration: 3600000 # 60 minutes
