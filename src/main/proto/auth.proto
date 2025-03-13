@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.garage.garage_service.core.grpc;
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.garage.user_service.core.grpc.server";
+option java_outer_classname = "AuthServiceProto";
+
+message TokenValidateRequest {
+  string token = 1;
+}
+
+message TokenValidateResponse {
+  bool isValid = 1;
+  map<string, string> claims = 2;
+}
+
+service TokenValidateService {
+  rpc ValidateToken(TokenValidateRequest) returns (TokenValidateResponse);
+}
