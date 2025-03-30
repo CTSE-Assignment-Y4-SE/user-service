@@ -1,0 +1,102 @@
+version: '3.9'
+
+services:
+  user-service:
+    build:
+      context: .
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "9092:9092"
+      - "7072:7072"
+    networks:
+      - garage-app
+    depends_on:
+      postgres-user-service:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+  postgres-user-service:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Root@123
+      POSTGRES_DB: user-service
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres-user-service-data:/var/lib/postgresql/data
+    networks:
+      - garage-app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d user-service"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+    networks:
+      - garage-app
+    healthcheck:
+      test: echo ruok | nc -w 2 localhost 2181 || exit 1
+      interval: 10s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+      - 9092:9092
+    restart: always
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - garage-app
+    healthcheck:
+      test: nc -z localhost 9092 || exit 1
+      interval: 10s
+      retries: 5
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - 8090:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    networks:
+      - garage-app
+
+volumes:
+  zookeeper-data:
+  zookeeper-log:
+  postgres-user-service-data:
+  kafka-data:
+
+networks:
+  garage-app:
+    name: garage-app
