@@ -33,11 +33,11 @@ jobs:
       - name: Extract repository name
         run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Format code
-        run: ./gradlew format
-
       - name: Grant Execute Permission to Gradle Wrapper
         run: chmod +x gradlew
+
+      - name: Format code
+        run: ./gradlew format
 
       - name: Build with Gradle
         run: ./gradlew clean build -x test
