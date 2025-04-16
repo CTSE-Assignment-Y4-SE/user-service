@@ -65,4 +65,4 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ./k8s/user-service/deployment.yaml
           git commit -m "Feat: update user-service image tag to ${{ env.IMAGE_TAG }}"
-          git push
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/CTSE-Assignment-Y4-SE/infrastructure.git HEAD:main
