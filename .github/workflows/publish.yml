@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: "CTSE-Assignment-Y4-SE/infrastructure"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           path: infrastructure
 
       - name: Update Image Tag in Kubernetes Deployment
