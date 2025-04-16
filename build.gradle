@@ -1,12 +1,3 @@
-buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.43")
-	}
-}
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
@@ -72,5 +63,3 @@ protobuf {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-apply plugin: 'io.spring.javaformat'
