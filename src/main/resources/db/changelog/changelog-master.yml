@@ -10,6 +10,3 @@ databaseChangeLog:
 
   - include:
       file: classpath:/db/changelog/ddl/ddl-script-v4.sql
-
-  - include:
-      file: classpath:/db/changelog/ddl/ddl-script-v5.sql
