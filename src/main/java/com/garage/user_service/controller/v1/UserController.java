@@ -25,7 +25,7 @@ public class UserController {
 
 	@NonNull
 	private final UserService userService;
-
+	//profile
 	@GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseEntityDto> getProfile() {
 		ResponseEntityDto response = userService.getCurrentUser();
